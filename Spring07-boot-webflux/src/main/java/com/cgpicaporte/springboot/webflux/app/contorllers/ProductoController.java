@@ -54,4 +54,36 @@ public class ProductoController {
 		model.addAttribute("titulo", "LISTADO DE PRODUCTOS");
 		return "listar";
 	}
+	
+	@GetMapping("/listar-full")
+	public String listarFull(Model model) {
+		
+		Flux<Producto> productos = dao.findAll().map(producto -> {
+			producto.setNombre(producto.getNombre().toUpperCase());
+			return producto;
+		}).repeat(5000);
+		//En el navegador vemos que tarda en recibir la inforación 4.69 segundos
+		
+		
+		
+		model.addAttribute("productos", productos);//cuando pasamos los datos hace el subscribe. Thimeleaf es el observador que se suscribe a la plantilla
+		model.addAttribute("titulo", "LISTADO DE PRODUCTOS");
+		return "listar";
+	}
+	
+	@GetMapping("/listar-chunked")
+	public String listarChunked(Model model) {
+		
+		Flux<Producto> productos = dao.findAll().map(producto -> {
+			producto.setNombre(producto.getNombre().toUpperCase());
+			return producto;
+		}).repeat(5000);
+		//En el navegador vemos que tarda en recibir la inforación 4.69 segundos
+		
+		
+		
+		model.addAttribute("productos", productos);//cuando pasamos los datos hace el subscribe. Thimeleaf es el observador que se suscribe a la plantilla
+		model.addAttribute("titulo", "LISTADO DE PRODUCTOS");
+		return "listar-chunked";
+	}
 }
